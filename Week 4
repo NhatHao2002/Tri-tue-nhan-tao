@@ -1,0 +1,64 @@
+import numpy as np
+import skfuzzy as fuzz
+import matplotlib.pyplot as plt
+from skfuzzy import control as ctrl
+
+time = ctrl.Antecedent(np.arange(0,19,1),'time')
+rice =  ctrl.Antecedent(np.arange(0,21,1),'rice')
+power =  ctrl.Consequent(np.arange(0,22,1),'power')
+
+time['very short'] = fuzz.trimf(time.universe,[0,0.5,1])
+time['short'] = fuzz.trimf(time.universe,[0,2,5])
+time['averange'] = fuzz.trimf(time.universe,[1,4,10])
+time['long'] = fuzz.trimf(time.universe,[5,8,12])
+time['very long'] = fuzz.trimf(time.universe,[7,10,18])
+
+rice['very less'] = fuzz.trimf(rice.universe,[0,1,2])
+rice['less'] = fuzz.trimf(rice.universe,[2,3,5])
+rice['averange'] = fuzz.trimf(rice.universe,[4,6,8])
+rice['much'] = fuzz.trimf(rice.universe,[5,9,12])
+rice['very much'] = fuzz.trimf(rice.universe,[8,17,20])
+
+power['very low'] = fuzz.trimf(power.universe,[0,1,3])
+power['low'] = fuzz.trimf(power.universe,[1,3,5])
+power['averange'] = fuzz.trimf(power.universe,[2,4,7])
+power['high'] = fuzz.trimf(power.universe,[4,5,8])
+power['very high'] = fuzz.trimf(power.universe,[6,8.5,10])
+
+food.view()
+service.view()
+tip.view()
+
+rule1 = ctrl.Rule(time['very short']&rice['very less'],power['very low'])
+rule2 = ctrl.Rule(time['short'] & rice['very less'],power['very low'])
+rule3 = ctrl.Rule(time['averange'] & rice['very less'],power['low'])
+rule4 = ctrl.Rule(time['long'] & rice['very less'],power['averange'])
+rule5 = ctrl.Rule(time['very long'] & rice['very less'],power['high'])
+rule6 = ctrl.Rule(time['very short'] & rice['less'],power['very low'])
+rule7 = ctrl.Rule(time['short'] & rice['less'],power['low'])
+rule8 = ctrl.Rule(time['averange'] & rice['less'],power['averange'])
+rule9 = ctrl.Rule(time['long'] & rice['less'],power['high'])
+rule10 = ctrl.Rule(time['very long'] & rice['less'],power['very high'])
+rule11 = ctrl.Rule(time['very short'] & rice['averange'],power['very low'])
+rule12 = ctrl.Rule(time['short'] & rice['averange'],power['low'])
+rule13 = ctrl.Rule(time['averange'] & rice['averange'],power['averange'])
+rule14 = ctrl.Rule(time['long'] & rice['averange'],power['high'])
+rule15 = ctrl.Rule(time['very long'] & rice['averange'],power['very high'])
+rule16 = ctrl.Rule(time['very short'] & rice['much'],power['very low'])
+rule17 = ctrl.Rule(time['short'] & rice['much'],power['low'])
+rule18 = ctrl.Rule(time['averange'] & rice['much'],power['averange'])
+rule19 = ctrl.Rule(time['long'] & rice['much'],power['high'])
+rule20 = ctrl.Rule(time['very long'] & rice['much'],power['very high'])
+rule21 = ctrl.Rule(time['very short'] & rice['very much'],power['low'])
+rule22 = ctrl.Rule(time['short'] & rice['very much'],power['averange'])
+rule23 = ctrl.Rule(time['averange'] & rice['very much'],power['high'])
+rule24 = ctrl.Rule(time['long'] & rice['very much'],power['high'])
+rule25 = ctrl.Rule(time['very long'] & rice['very much'],power['very high'])
+
+Power_ctrl = ctrl.ControlSystem([rule1,rule2,rule3,rule4,rule5,rule6,rule7,rule8,rule9,rule10,rule11,rule12,rule13,rule14,rule15,rule16,rule17,rule18,rule19,rule20,rule21,rule22,rule23,rule24,rule25])
+Power = ctrl.ControlSystemSimulation(Power_ctrl)
+Power.input['time'] = 4.7
+Power.input['rice'] = 5.3
+Power.compute()
+print(Power.output['power'])
+power.view(sum = Power)
