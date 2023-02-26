@@ -1,1 +1,1 @@
-# Tri-tue-nhan-tao-AI-
+# Tri-tue-nhan-tao
